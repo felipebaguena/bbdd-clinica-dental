@@ -20,5 +20,17 @@ interventionController.newIntervention = async(req, res) => {
     }
 };
 
+interventionController.getAllIntervention = async (req, res) => {
+    try {
+        const intervention = await Intervention.findAll({
+            // attributes: { exclude: ['password'] }
+        });
+
+        return res.json(intervention);
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+};
+
 
 module.exports = interventionController;
