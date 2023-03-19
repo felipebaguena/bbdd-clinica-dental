@@ -1,0 +1,32 @@
+{
+  "name": "gh-fsd-2023-p4-bbdd",
+  "version": "1.0.0",
+  "description": "Proyecto 4 FSD Base de datos",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipebaguena/gh-fsd-2023-p4-bbdd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/felipebaguena/gh-fsd-2023-p4-bbdd/issues"
+  },
+  "homepage": "https://github.com/felipebaguena/gh-fsd-2023-p4-bbdd#readme",
+  "dependencies": {
+    "bcrypt": "5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "16.0.3",
+    "express": "4.18.2",
+    "jsonwebtoken": "9.0.0",
+    "mysql2": "3.1.2",
+    "nodemon": "2.0.20",
+    "sequelize": "6.29.0",
+    "sequelize-cli": "6.6.0"
+  }
+}
