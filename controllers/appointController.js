@@ -1,4 +1,4 @@
-const {Appointment} = require('../models');
+const {Appointment, User} = require('../models');
 
 const appointController = {}
 
@@ -146,7 +146,28 @@ appointController.getUpcomingAppointments = async (req, res) => {
 
 appointController.getAllAppointments = async (req, res) => {
     try {
-      const appointments = await Appointment.findAll();
+      const appointments = await Appointment.findAll({
+        // attributes: { exclude: ['password'] }
+        include: [
+            {
+                model: Intervention,
+                attributes: { exclude: ['createdAt', 'updatedAt'] },
+            },
+            {
+              model: Patient,
+              include: [
+                {
+                    model: User,
+                    attributes: ['name', 'surname'],
+                },
+              ],
+              attributes: {
+                exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
+              },
+            },
+          ],
+        }
+      );
       return res.json(appointments);
     } catch (error) {
       return res.status(500).send(error.message);
