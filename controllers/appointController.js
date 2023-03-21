@@ -1,4 +1,4 @@
-const {Appointment, User} = require('../models');
+const {Appointment, User, Doctor, Speciality} = require('../models');
 
 const appointController = {}
 
@@ -155,6 +155,18 @@ appointController.getAllAppointments = async (req, res) => {
             },
             {
               model: Patient,
+              include: [
+                {
+                    model: User,
+                    attributes: ['name', 'surname'],
+                },
+              ],
+              attributes: {
+                exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: Doctor,
               include: [
                 {
                     model: User,
