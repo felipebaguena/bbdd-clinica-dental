@@ -9,6 +9,7 @@ router.post('/users',userController.createUser)
 router.post('/users/login',userController.login)
 
 router.get('/users/appointments', verifyToken, userController.getAppointment)
+router.get('/doctor/appointments', verifyToken, isDoctor, userController.getAppointmentDoctor)
 router.get('/profile',verifyToken,userController.profile)
 router.put('/updateprofile',verifyToken,userController.updateUser)
 router.put('/updateprofile/payment',verifyToken,userController.updatePayment)

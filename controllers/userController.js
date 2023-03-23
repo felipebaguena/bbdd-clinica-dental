@@ -159,69 +159,170 @@ userController.updateUser = async (req, res) => {
 // VER CITAS (Los usuarios ven sus propias citas y los doctores verán las que tienen asignadas)
 
 userController.getAppointment = async (req, res) => {
-    try {
-      let userAppointment;
-  
-      if (req.roles.includes('Doctor')) {
-        userAppointment = await Appointment.findAll({
-          where: {
-            doctor_id: req.userId,
+  try {
+    let userAppointment;
+
+      userAppointment = await Appointment.findAll({
+        where: {
+          patient_id: req.userId,
+        },
+        include: [
+          {
+              model: Intervention,
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
           },
-          include: [
-            {
-                model: Intervention,
-                attributes: { exclude: ['createdAt', 'updatedAt'] },
-            },
-            {
-              model: Patient,
-              include: [
-                {
-                    model: User,
-                    attributes: { exclude: ['id', 'password', 'updatedAt'] }
-            }],
-              attributes: {
-                exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
+          {
+            model: Patient,
+            include: [
+              {
+                  model: User,
+                  attributes: ['name', 'surname'],
               },
+            ],
+            attributes: {
+              exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
             },
-          ],
-          attributes: {
-            exclude: ['patient_id', 'intervention_id'],
           },
-        });
-      } else {
-        userAppointment = await Appointment.findAll({
-          where: {
-            patient_id: req.userId,
-          },
-          include: [
-            {
-                model: Intervention,
-                attributes: { exclude: ['createdAt', 'updatedAt'] },
-            },
-            {
-              model: Patient,
-              include: [
-                {
-                    model: User,
-                    attributes: ['name', 'surname'],
-                },
-              ],
-              attributes: {
-                exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
+          {
+            model: Doctor,
+            include: [
+              {
+                  model: User,
+                  attributes: ['name', 'surname'],
               },
+            ],
+            attributes: {
+              exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
             },
-          ],
-          attributes: {
-            exclude: ['patient_id', 'intervention_id'],
           },
-        });
-      }
+        ],
+        attributes: {
+          exclude: ['patient_id', 'intervention_id'],
+        },
+      });
+
+    return res.json(userAppointment);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
+
+// VER CITAS (Como doctor)
+
+
+userController.getAppointmentDoctor = async (req, res) => {
+  try {
+    let userAppointmentDoctor;
+
+      userAppointmentDoctor = await Appointment.findAll({
+        where: {
+          doctor_id: req.userId,
+        },
+        include: [
+          {
+              model: Intervention,
+              attributes: { exclude: ['createdAt', 'updatedAt'] },
+          },
+          {
+            model: Patient,
+            include: [
+              {
+                  model: User,
+                  attributes: ['name', 'surname'],
+              },
+            ],
+            attributes: {
+              exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
+            },
+          },
+          {
+            model: Doctor,
+            include: [
+              {
+                  model: User,
+                  attributes: ['name', 'surname'],
+              },
+            ],
+            attributes: {
+              exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
+            },
+          },
+        ],
+      });
+
+    return res.json(userAppointmentDoctor);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
+
+
+// userController.getAppointment = async (req, res) => {
+//     try {
+//       let userAppointment;
   
-      return res.json(userAppointment);
-    } catch (error) {
-      return res.status(500).send(error.message);
-    }
-  };
+//       if (req.roles.includes('Doctor')) {
+//         userAppointment = await Appointment.findAll({
+//           where: {
+//             doctor_id: req.userId,
+//           },
+//           include: [
+//             {
+//                 model: Intervention,
+//                 attributes: { exclude: ['createdAt', 'updatedAt'] },
+//             },
+//             {
+//               model: Patient,
+//               include: [
+//                 {
+//                     model: User,
+//                     attributes: { exclude: ['id', 'password', 'updatedAt'] }
+//             }],
+//               attributes: {
+//                 exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
+//               },
+//             },
+//           ],
+//           attributes: {
+//             exclude: ['patient_id', 'intervention_id'],
+//           },
+//         });
+//       } else {
+//         userAppointment = await Appointment.findAll({
+//           where: {
+//             patient_id: req.userId,
+//           },
+//           include: [
+//             {
+//                 model: Intervention,
+//                 attributes: { exclude: ['createdAt', 'updatedAt'] },
+//             },
+//             {
+//               model: Patient,
+//               include: [
+//                 {
+//                     model: User,
+//                     attributes: ['name', 'surname'],
+//                 },
+//               ],
+//               attributes: {
+//                 exclude: ['user_id', 'role_id', 'createdAt', 'updatedAt'],
+//               },
+//             },
+//           ],
+//           attributes: {
+//             exclude: ['patient_id', 'intervention_id'],
+//           },
+//         });
+//       }
+  
+//       return res.json(userAppointment);
+//     } catch (error) {
+//       return res.status(500).send(error.message);
+//     }
+//   };
 
 // ACTUALIZACIÓN FORMA DE PAGO (Para los clientes)
 
