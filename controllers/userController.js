@@ -3,6 +3,7 @@ const {User, Role, UserRole, Patient, Appointment, Intervention, Doctor} = requi
 const userController = {}
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 
 /////// ZONA USER ///////
 
@@ -103,7 +104,9 @@ userController.deleteUser = async(req, res) =>{
 userController.profile = async(req, res) => {
     try {
         const userId = req.userId;
-        const user = await User.findByPk(userId)
+        const user = await User.findByPk(userId,{
+          attributes: {exclude: ['password']}
+      })
 
         return res.json(user);
     } catch (erro) {
@@ -361,6 +364,31 @@ userController.getAllUsers = async (req, res) => {
         });
 
         return res.json(users);
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+};
+
+// BUSCAR TODOS LOS USUARIOS
+
+userController.searchAllUsersAdmin = async (req, res) => {
+  try {
+      const userName = req.params.name || req.params.surname;
+      // const userSurname = req.params.surname;
+      const searchingUser = await User.findAll(
+          {
+              where: {
+                  [Op.or]:
+                      [{ name: {
+                          [Op.like]: `${userName}%`
+                      } }, { surname: {
+                          [Op.like]: `${userName}%`
+                      } }]
+              }
+          }
+      )
+
+        return res.json(searchingUser);
     } catch (error) {
         return res.status(500).send(error.message);
     }
