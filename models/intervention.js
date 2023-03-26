@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   Intervention.init({
     name: DataTypes.STRING,
     description: DataTypes.STRING,
-    price: DataTypes.FLOAT
+    price: DataTypes.FLOAT,
+    image: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Intervention',
